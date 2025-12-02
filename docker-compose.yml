@@ -1,33 +1,42 @@
 services:
   backend:
-    image: yourdockerhubusername/payroll-backend:latest
+    image: cmsintern01/payroll-backend:latest
     environment:
-      - PORT=4000
-      - NODE_ENV=production
-      # ... rest of your env
-    ports:
-      - "4000:4000"
+      PORT: 4000
+      NODE_ENV: production
+      FRONTEND_URLS: http://localhost
+      DB_PORT: 3306
+      DB_HOST: mysql-cms.alwaysdata.net
+      DB_USER: cms
+      DB_PASSWORD: 706@cmsH
+      DB_NAME: cms_payroll_db
+      DB_CONNECTION_LIMIT: 10
+      JWT_SECRET: super_secret_change_me
+      JWT_EXPIRES_IN: 8h
+      MAX_FILE_SIZE_MB: 10
+      UPLOAD_DIR: /app/src/uploads
+      LOG_DIR: /app/logs
     volumes:
       - ./uploads:/app/src/uploads
       - ./logs:/app/logs
-    restart: unless-stopped
+    ports:
+      - "4000:4000"   # Expose backend directly to host
     networks:
       - payroll_net
 
   frontend:
-    image: yourdockerhubusername/payroll-frontend:latest
+    image: cmsintern01/payroll-frontend:latest
     environment:
-      VITE_API_URL: /api
+      VITE_API_URL: http://backend   # Point frontend directly to backend
     ports:
-      - "80:80"
-    depends_on:
-      - backend
+      - "3000:80"     # Expose frontend to host (container port 80 → host 3000)
     networks:
       - payroll_net
-    restart: unless-stopped
 
 networks:
   payroll_net:
     driver: bridge
+
+
 
 
