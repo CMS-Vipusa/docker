@@ -4,9 +4,9 @@ services:
     environment:
       PORT: 4000
       NODE_ENV: production
-      FRONTEND_URLS: http://localhost
-      DB_PORT: 3306
+      FRONTEND_URLS: http://localhost,http://hexar.dynns.com:3000
       DB_HOST: mysql-cms.alwaysdata.net
+      DB_PORT: 3306
       DB_USER: cms
       DB_PASSWORD: 706@cmsH
       DB_NAME: cms_payroll_db
@@ -20,18 +20,22 @@ services:
       - ./uploads:/app/src/uploads
       - ./logs:/app/logs
     ports:
-      - "4000:4000"   # Expose backend directly to host
+      - "4000:4000"
     networks:
       - payroll_net
+    restart: unless-stopped
 
   frontend:
     image: cmsintern01/payroll-frontend:latest
     environment:
-      VITE_API_URL: http://backend   # Point frontend directly to backend
+      VITE_API_URL: http://backend:4000
     ports:
-      - "3000:80"     # Expose frontend to host (container port 80 → host 3000)
+      - "3000:80"
+    depends_on:
+      - backend
     networks:
       - payroll_net
+    restart: unless-stopped
 
 networks:
   payroll_net:
