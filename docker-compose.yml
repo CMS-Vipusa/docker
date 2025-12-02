@@ -4,7 +4,7 @@ services:
     environment:
       PORT: 4000
       NODE_ENV: production
-      FRONTEND_URLS: http://localhost,http://hexar.dynns.com:3000
+      FRONTEND_URLS: http://localhost:3000,http://hexar.dynns.com:3000
       DB_HOST: mysql-cms.alwaysdata.net
       DB_PORT: 3306
       DB_USER: cms
@@ -40,7 +40,3 @@ services:
 networks:
   payroll_net:
     driver: bridge
-
-
-
-
