@@ -2,25 +2,25 @@ version: '3.9'
 
 services:
   backend:
-    image: companydockerhub/payroll-backend:latest
+    image: cmsintern01/payroll-backend:latest
     env_file:
-      - backend.env           # Make sure this file contains all required vars: DB_HOST, DB_USER, JWT_SECRET, etc.
+      - backend.env           
     ports:
       - "4000:4000"
     volumes:
-      - ./Payroll_management_backend/src/uploads:/app/src/uploads
-      - ./Payroll_management_backend/logs:/app/logs
+      - ./backend/src/uploads:/app/src/uploads
+      - ./backend/logs:/app/logs
     command: ["node", "src/server.js"]  # Ensure your backend image has Node installed and server.js exists
     networks:
       - payroll_net
     restart: unless-stopped
 
   frontend:
-    image: companydockerhub/payroll-frontend:latest
+    image: cmsintern01/payroll-frontend:latest
     environment:
-      REACT_APP_API_URL: http://backend:4000  # Points to backend container, not localhost
+      VITE_API_URL: http://hexar.dynns.com/api  # Points to backend container, not localhost
     ports:
-      - "80:80"
+      - "3000:80"
     depends_on:
       - backend
     networks:
@@ -33,4 +33,3 @@ volumes:
 networks:
   payroll_net:
     driver: bridge
-
