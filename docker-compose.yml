@@ -1,35 +1,33 @@
-version: '3.9'
-
 services:
   backend:
-    image: cmsintern01/payroll-backend:latest
-    env_file:
-      - backend.env           
+    image: yourdockerhubusername/payroll-backend:latest
+    environment:
+      - PORT=4000
+      - NODE_ENV=production
+      # ... rest of your env
     ports:
       - "4000:4000"
     volumes:
-      - ./backend/src/uploads:/app/src/uploads
-      - ./backend/logs:/app/logs
-    command: ["node", "src/server.js"]  # Ensure your backend image has Node installed and server.js exists
+      - ./uploads:/app/src/uploads
+      - ./logs:/app/logs
+    restart: unless-stopped
     networks:
       - payroll_net
-    restart: unless-stopped
 
   frontend:
-    image: cmsintern01/payroll-frontend:latest
+    image: yourdockerhubusername/payroll-frontend:latest
     environment:
-      VITE_API_URL: http://hexar.dynns.com/api  # Points to backend container, not localhost
+      VITE_API_URL: /api
     ports:
-      - "3000:80"
+      - "80:80"
     depends_on:
       - backend
     networks:
       - payroll_net
     restart: unless-stopped
 
-volumes:
-  mysql_data: {}
-
 networks:
   payroll_net:
     driver: bridge
+
+
